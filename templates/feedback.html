@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head><title>Citizen Feedback</title></head>
+<body>
+    <h2>Submit Feedback</h2>
+    <form method="post">
+        <textarea name="feedback" rows="4" cols="40" required></textarea><br><br>
+        <input type="submit" value="Submit">
+    </form>
+    {% if message %}
+        <p>{{ message }} - Sentiment: {{ sentiment }}</p>
+    {% endif %}
+</body>
+</html>

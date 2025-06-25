@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Citizen AI – Chat</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="chat-container">
+    <header>
+      <h1>🧠 Citizen AI</h1>
+      <p>Your Intelligent Civic Assistant</p>
+    </header>
+
+    <div class="chat-box" id="response-box">
+    </div>
+
+    <form id="chat-form">
+      <textarea id="message" placeholder="Type your civic question here..." required></textarea>
+      <button type="submit">➤</button>
+    </form>
+  </div>
+
+  <script>
+    const form = document.getElementById('chat-form');
+    const input = document.getElementById('message');
+    const chatBox = document.getElementById('response-box');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const userText = input.value.trim();
+      if (!userText) return;
+
+      chatBox.innerHTML += `<div class="message user">👤 <div>${userText}</div></div>`;
+      chatBox.innerHTML += `<div class="message ai typing">🤖 <div>Citizen AI is typing...</div></div>`;
+      chatBox.scrollTop = chatBox.scrollHeight;
+      input.value = '';
+
+      const response = await fetch('/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: userText })
+      });
+      const data = await response.json();
+
+      const loading = document.querySelector('.typing');
+      if (loading) loading.remove();
+
+      chatBox.innerHTML += `<div class="message ai">🤖 <div>${data.reply}</div></div>`;
+      chatBox.scrollTop = chatBox.scrollHeight;
+    });
+  </script>
+</body>
+</html>
